@@ -1,3 +1,4 @@
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import {
   Form,
@@ -11,7 +12,6 @@ import {
   useNavigation
 } from "@remix-run/react"
 import { createEmptyContact, getContacts } from "./data"
-import { LinksFunction } from "@remix-run/node"
 import appStylesHref from "./app.css?url"
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: appStylesHref }
@@ -22,8 +22,10 @@ export const action = async () => {
   return redirect(`/contacts/${contact.id}/edit`)
 }
 
-export const loader = async () => {
-  const contacts = await getContacts()
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const url = new URL(request.url)
+  const query = url.searchParams.get("q")
+  const contacts = await getContacts(query)
   return json({ contacts })
 }
 
