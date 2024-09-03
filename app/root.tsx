@@ -24,9 +24,9 @@ export const action = async () => {
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url)
-  const query = url.searchParams.get("q")
-  const contacts = await getContacts(query)
-  return json({ contacts })
+  const q = url.searchParams.get("q")
+  const contacts = await getContacts(q)
+  return json({ contacts, q})
 }
 
 export default function App() {
